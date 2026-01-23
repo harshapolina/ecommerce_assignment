@@ -1,0 +1,163 @@
+.order-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.order-modal {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.order-modal-header {
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2d5016;
+  color: white;
+  border-radius: 12px 12px 0 0;
+}
+
+.order-modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.order-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.order-loading,
+.order-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.order-empty-subtitle {
+  font-size: 0.9rem;
+  color: #999;
+  margin-top: 10px;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.order-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  transition: box-shadow 0.3s;
+}
+
+.order-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.order-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.order-item-header h3 {
+  margin: 0;
+  color: #2d5016;
+  font-size: 1.1rem;
+}
+
+.order-id {
+  font-size: 0.85rem;
+  color: #666;
+  font-family: monospace;
+}
+
+.order-item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.order-date,
+.order-total {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.order-total {
+  color: #2d5016;
+  font-weight: 600;
+}
+
+.order-modal-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #e0e0e0;
+  background-color: #f5f5f5;
+  border-radius: 0 0 12px 12px;
+}
+
+.order-count {
+  margin: 0;
+  text-align: center;
+  color: #2d5016;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .order-modal {
+    max-width: 95%;
+    max-height: 90vh;
+  }
+
+  .order-item-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+}
+
