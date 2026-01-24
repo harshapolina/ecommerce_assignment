@@ -14,11 +14,18 @@ function Login() {
     setLoading(true);
 
     try {
-      const data = await login(username, password);
-      localStorage.setItem('token', data.token);
-      navigate('/items');
+        const data = await login(username, password);
+        localStorage.setItem('token', data.token);
+        navigate('/items');
     } catch (error) {
-      window.alert('Invalid username/password');
+      const errorMessage = error.message || 'Login failed'
+      if (errorMessage.includes('already in use')) {
+        window.alert("Account is already in use on another device")
+      } else if (errorMessage.includes('Invalid') || errorMessage.includes('credentials') || errorMessage.includes('No user found')) {
+        window.alert("Invalid username/password")
+      } else {
+        window.alert(errorMessage)
+      }
     } finally {
       setLoading(false);
     }
@@ -30,13 +37,14 @@ function Login() {
         <h1>Shopping Cart</h1>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Username</label>
+            <label>Username or Email</label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
               disabled={loading}
+              placeholder="Enter username or email"
             />
           </div>
           <div className="form-group">

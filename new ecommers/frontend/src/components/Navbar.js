@@ -1,13 +1,19 @@
 import { Link, useNavigate } from 'react-router-dom'
+import { logout } from '../utils/api.js'
 import './Navbar.css'
 
 function Navbar({ onCartClick, onHistoryClick, onCheckoutClick }) {
   const navigate = useNavigate()
   const token = localStorage.getItem('token')
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await logout()
+    } catch (error) {
+    } finally {
     localStorage.removeItem('token')
     navigate('/login')
+    }
   }
 
   return (
@@ -16,18 +22,12 @@ function Navbar({ onCartClick, onHistoryClick, onCheckoutClick }) {
         <Link to="/items" className="nav-logo">
           Shopping Cart
         </Link>
-        <div className="nav-menu">
-          <Link to="/items" className="nav-link">Home</Link>
-          <Link to="/items" className="nav-link">Shop</Link>
-          <Link to="/items" className="nav-link">About</Link>
-          <Link to="/items" className="nav-link">Contact</Link>
-        </div>
         <div className="nav-actions">
           {token ? (
             <>
-              <button className="nav-action-btn" onClick={onCartClick}>Cart</button>
-              <button className="nav-action-btn" onClick={onHistoryClick}>History</button>
               <button className="nav-action-btn" onClick={onCheckoutClick}>Checkout</button>
+               <button className="nav-action-btn" onClick={onCartClick}>Cart</button>
+              <button className="nav-action-btn" onClick={onHistoryClick}>Order History</button>
               <button className="nav-action-btn logout" onClick={handleLogout}>Logout</button>
             </>
           ) : (

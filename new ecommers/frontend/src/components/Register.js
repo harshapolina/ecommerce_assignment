@@ -5,6 +5,7 @@ import './Login.css'
 
 function Register() {
   const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
@@ -14,7 +15,7 @@ function Register() {
     setLoading(true)
 
     try {
-      await register(username, password)
+      await register(username, email, password)
       window.alert('Registration successful! Please login.')
       navigate('/login')
     } catch (error) {
@@ -35,6 +36,16 @@ function Register() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              required
+              disabled={loading}
+            />
+          </div>
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
             />

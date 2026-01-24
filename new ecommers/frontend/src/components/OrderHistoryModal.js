@@ -43,7 +43,9 @@ function OrderHistoryModal({ isOpen, onClose }) {
       <div className="order-modal" onClick={(e) => e.stopPropagation()}>
         <div className="order-modal-header">
           <h2>Order History</h2>
-          <button className="close-btn" onClick={onClose}>×</button>
+          <button className="close-btn" onClick={onClose}>
+            <i className="bi bi-x-lg"></i>
+          </button>
         </div>
 
         <div className="order-modal-body">
@@ -60,18 +62,23 @@ function OrderHistoryModal({ isOpen, onClose }) {
                 <div key={order.id || order._id || index} className="order-item">
                   <div className="order-item-header">
                     <h3>Order #{index + 1}</h3>
-                    <span className="order-id">ID: {order.id || order._id || 'N/A'}</span>
+                    <span className="order-date">{formatDate(order.createdAt)}</span>
                   </div>
-                  <div className="order-item-details">
-                    <p className="order-date">
-                      <strong>Date:</strong> {formatDate(order.createdAt)}
-                    </p>
-                    {order.total && (
-                      <p className="order-total">
-                        <strong>Total:</strong> ${order.total.toFixed(2)}
-                      </p>
-                    )}
-                  </div>
+                  {order.items && order.items.length > 0 ? (
+                    <div className="order-items-list">
+                      {order.items.map((item, itemIndex) => (
+                        <div key={itemIndex} className="order-item-row">
+                          <div className="order-item-info">
+                            <p className="order-item-name">{item.name || 'Unknown'}</p>
+                            <p className="order-item-quantity">Quantity: {item.quantity || 1}</p>
+                            <p className="order-item-id">Item ID: {item.itemId}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p>No items found</p>
+                  )}
                 </div>
               ))}
             </div>

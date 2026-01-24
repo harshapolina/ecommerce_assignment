@@ -18,25 +18,15 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      '^/api/users': {
+      '/api': {
         target: 'http://localhost:3001',
+        changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
-        changeOrigin: true
-      },
-      '^/api/items': {
-        target: 'http://localhost:3001',
-        rewrite: (path) => path.replace(/^\/api/, ''),
-        changeOrigin: true
-      },
-      '^/api/carts': {
-        target: 'http://localhost:3001',
-        rewrite: (path) => path.replace(/^\/api/, ''),
-        changeOrigin: true
-      },
-      '^/api/orders': {
-        target: 'http://localhost:3001',
-        rewrite: (path) => path.replace(/^\/api/, ''),
-        changeOrigin: true
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, _res) => {
+            console.error('Proxy error:', err);
+          });
+        }
       }
     }
   }

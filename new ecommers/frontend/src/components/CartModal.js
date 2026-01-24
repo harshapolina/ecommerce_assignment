@@ -1,75 +1,46 @@
 import { useState, useEffect } from 'react'
-import { getCartItems, updateCartQuantity, removeCartItem } from '../utils/api.js'
+import { getCartItems, getItems, removeFromCart } from '../utils/api.js'
 import './CartModal.css'
 
-function CartModal({ isOpen, onClose, refreshKey }) {
+function CartModal({ isOpen, onClose }) {
   const [cartItems, setCartItems] = useState([])
+  const [itemsData, setItemsData] = useState({})
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (isOpen) {
-      fetchCartItems()
+      fetchCartData()
     }
-  }, [isOpen, refreshKey])
+  }, [isOpen])
 
-  const fetchCartItems = async (showLoading = true) => {
+  const fetchCartData = async () => {
     try {
-      if (showLoading) setLoading(true)
-      const items = await getCartItems()
-      setCartItems(Array.isArray(items) ? items : [])
+      setLoading(true)
+      const cartData = await getCartItems()
+      const allItems = await getItems()
+      
+      const itemsMap = {}
+      allItems.forEach(item => {
+        itemsMap[item._id || item.id] = item
+      })
+      
+      setItemsData(itemsMap)
+      setCartItems(Array.isArray(cartData) ? cartData : [])
     } catch (error) {
       setCartItems([])
     } finally {
-      if (showLoading) setLoading(false)
+      setLoading(false)
     }
   }
 
-  const handleQuantityChange = async (itemId, newQuantity) => {
-    if (newQuantity < 1) return
-
-    const previousItems = [...cartItems]
-    setCartItems(prevItems => 
-      prevItems.map(item => {
-        const matches = item.itemId === itemId || 
-                       item.itemId?._id === itemId || 
-                       item.itemId?.toString() === itemId?.toString()
-        return matches ? { ...item, quantity: newQuantity } : item
-      })
-    )
-
+  const handleRemoveItem = async (itemId) => {
     try {
-      await updateCartQuantity(itemId, newQuantity)
-      fetchCartItems(false).catch(() => {
-        setCartItems(previousItems)
-      })
+      await removeFromCart(itemId)
+      await fetchCartData()
     } catch (error) {
-      setCartItems(previousItems)
+      alert('Failed to remove item')
     }
   }
-
-  const handleRemove = async (itemId) => {
-    const previousItems = [...cartItems]
-    setCartItems(prevItems => 
-      prevItems.filter(item => {
-        const matches = item.itemId === itemId || 
-                       item.itemId?._id === itemId || 
-                       item.itemId?.toString() === itemId?.toString()
-        return !matches
-      })
-    )
-
-    try {
-      await removeCartItem(itemId)
-      fetchCartItems(false).catch(() => {
-        setCartItems(previousItems)
-      })
-    } catch (error) {
-      setCartItems(previousItems)
-    }
-  }
-
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0)
-  const totalPrice = cartItems.reduce((sum, item) => sum + (item.quantity * (item.itemPrice || 25.00)), 0)
 
   if (!isOpen) return null
 
@@ -89,66 +60,33 @@ function CartModal({ isOpen, onClose, refreshKey }) {
               <p>Your cart is empty</p>
             </div>
           ) : (
-            <div className="cart-items">
-              {cartItems.map(item => (
-                <div key={item._id} className="cart-item">
-                  <div className="cart-item-info">
-                    {item.itemImage ? (
-                      <>
-                        <img 
-                          src={item.itemImage} 
-                          alt={item.itemName} 
-                          className="cart-item-image"
-                          onError={(e) => {
-                            e.target.style.display = 'none'
-                            if (e.target.nextSibling) {
-                              e.target.nextSibling.style.display = 'flex'
-                            }
-                          }}
-                        />
-                        <div className="cart-item-placeholder" style={{ display: 'none' }}>🌿</div>
-                      </>
-                    ) : (
-                      <div className="cart-item-placeholder">🌿</div>
-                    )}
-                    <div className="cart-item-details">
-                      <h3>{item.itemName}</h3>
-                      <p className="cart-item-price">${(item.itemPrice || 25.00).toFixed(2)}</p>
+            <div className="cart-items-list">
+              {cartItems.map((cartItem, index) => {
+                const item = itemsData[cartItem.itemId]
+                const itemName = cartItem.itemName || item?.name || `Item ${cartItem.itemId}`
+                return (
+                  <div key={index} className="cart-item-row">
+                    <div className="cart-item-info">
+                      <p className="cart-item-name">{itemName}</p>
+                      <p className="cart-item-id">Item ID: {cartItem.itemId}</p>
+                      <p className="cart-item-quantity">Quantity: {cartItem.quantity || 1}</p>
                     </div>
-                  </div>
-                  <div className="cart-item-controls">
                     <button
-                      className="quantity-btn"
-                      onClick={() => handleQuantityChange(item.itemId, item.quantity - 1)}
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleRemoveItem(cartItem.itemId)}
                     >
-                      −
-                    </button>
-                    <span className="quantity-display">{item.quantity}</span>
-                    <button
-                      className="quantity-btn"
-                      onClick={() => handleQuantityChange(item.itemId, item.quantity + 1)}
-                    >
-                      +
-                    </button>
-                    <button
-                      className="remove-btn"
-                      onClick={() => handleRemove(item.itemId)}
-                    >
-                      🗑️
+                      <i className="bi bi-trash"></i> Delete
                     </button>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
         </div>
 
         {cartItems.length > 0 && (
           <div className="cart-modal-footer">
-            <div className="cart-summary">
-              <p>Total Items: {totalItems}</p>
-              <p className="cart-total">Total: ${totalPrice.toFixed(2)}</p>
-            </div>
+            <p className="cart-count">Total Items: {cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0)}</p>
           </div>
         )}
       </div>
