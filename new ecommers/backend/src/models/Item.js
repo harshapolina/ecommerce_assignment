@@ -6,21 +6,10 @@ const itemSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  category: {
-    type: String,
-    default: 'Indoor Plants'
-  },
-  image: {
-    type: String,
-    default: ''
-  },
-  price: {
-    type: Number,
-    default: 25.00
-  },
   status: {
     type: String,
-    default: 'active'
+    enum: ['available', 'not available'],
+    default: 'available'
   },
   createdAt: {
     type: Date,

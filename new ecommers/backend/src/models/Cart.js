@@ -6,6 +6,10 @@ const cartSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  name: {
+    type: String,
+    default: ''
+  },
   status: {
     type: String,
     default: 'active'
@@ -16,7 +20,7 @@ const cartSchema = new mongoose.Schema({
   }
 })
 
-cartSchema.index({ userId: 1, status: 1 }, { unique: true, partialFilterExpression: { status: 'active' } })
+cartSchema.index({ userId: 1 }, { unique: true })
 
 export default mongoose.model('Cart', cartSchema)
 

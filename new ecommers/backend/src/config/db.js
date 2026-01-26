@@ -4,7 +4,11 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const connectDB = async () => {
-  await mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://harshapolina1_db_user:hvs2006@project-1.jscyy6f.mongodb.net/shopping_cart?appName=Project-1')
+  const mongoURI = process.env.MONGODB_URI
+  if (!mongoURI) {
+    throw new Error('MONGODB_URI is not defined')
+  }
+  await mongoose.connect(mongoURI)
 }
 
 export default connectDB
