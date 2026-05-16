@@ -646,12 +646,6 @@ $active_offer = (strpos($hr_script, 'offer_letters.php') !== false) ? 'active' :
             </a>
           </li>
           <li>
-            <a href="example_login.php" target="_blank">
-              <i class="bi bi-person-badge iconclassforall"></i>
-              <span class="menu-title">Example Employee</span>
-            </a>
-          </li>
-          <li>
             <a href="logout.php" style="color: #ef4444 !important;">
               <i class="bi bi-box-arrow-right iconclassforall" style="color: #ef4444 !important;"></i>
               <span class="menu-title">Logout</span>

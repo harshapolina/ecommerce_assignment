@@ -60,35 +60,6 @@
                     </div>
 
                     <input type="submit" class="rounded-button login-cta" id="adminLoginForm" value="Login">
-                    
-                    <script>
-                    document.querySelector('form').addEventListener('submit', function(e) {
-                        e.preventDefault();
-                        const form = this;
-                        const loginBtn = document.getElementById('adminLoginForm');
-                        loginBtn.value = "Acquiring Location...";
-                        loginBtn.disabled = true;
-                        
-                        if (navigator.geolocation) {
-                            navigator.geolocation.getCurrentPosition(
-                                function(pos) {
-                                    // Location granted, proceed to login
-                                    loginBtn.value = "Logging in...";
-                                    form.submit();
-                                },
-                                function(err) {
-                                    // Let them login anyway but alert them
-                                    alert("Please note: Location tracking requires browser permission. Proceeding to login.");
-                                    loginBtn.value = "Logging in...";
-                                    form.submit();
-                                },
-                                { timeout: 5000 }
-                            );
-                        } else {
-                            form.submit();
-                        }
-                    });
-                    </script>
 
                     <div class="register-div">Not registered yet? <a href="https://searchhomesindia.in/user/createuser/index.html" class="link create-account" -link>Create
                             an account ?</a></div>
