@@ -633,12 +633,6 @@ $active_offer = (strpos($hr_script, 'offer_letters.php') !== false) ? 'active' :
                 <span class="menu-title">Company Assets</span>
             </a>
           </li>
-          <li class="<?php echo (strpos($hr_script, 'live_tracking.php') !== false) ? 'active' : ''; ?>">
-            <a href="live_tracking.php">
-              <i class="bi bi-geo-alt-fill iconclassforall"></i>
-              <span class="menu-title">Live Tracking</span>
-            </a>
-          </li>
           <li class="<?php echo $active_settings; ?>">
             <a href="hr_settings.php">
               <i class="bi bi-gear-fill iconclassforall"></i>
